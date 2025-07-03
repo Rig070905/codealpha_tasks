@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Music Player</title>
+  <link rel="stylesheet" href="styles.css" />
+
+ 
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-...your-integrity-key..."
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body>
+  <div class="music-player">
+    <h1>🎵 My Music Player</h1>
+
+    <div class="album-art">
+  <img id="champion" src="images/champion.jpeg" alt="Album Art" />
+</div>
+
+
+    <div class="now-playing">
+      <h2 id="title">Song Title</h2>
+      <p id="artist">Artist Name</p>
+    </div>
+
+    <audio id="audio" src="songs/song1.mp3"></audio>
+
+    <div class="controls">
+      <button id="prev" class="control-btn"><i class="fas fa-backward"></i></button>
+      <button id="play" class="control-btn"><i class="fas fa-play"></i></button>
+      <button id="next" class="control-btn"><i class="fas fa-forward"></i></button>
+    </div>
+
+    <div class="progress">
+      <input type="range" id="progress-bar" value="0" />
+    </div>
+
+    <div class="volume">
+      🔊 Volume
+      <input type="range" id="volume" min="0" max="1" step="0.01" />
+    </div>
+  </div>
+CSS
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1db954, #121212);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.music-player {
+  background: #181818;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0,0,0,0.5);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.now-playing h2 {
+  margin: 10px 0 5px;
+  font-size: 1.4rem;
+}
+
+.now-playing p {
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.control-btn {
+  background: #1db954;
+  color: #fff;
+  border: none;
+  font-size: 1.5rem;
+  padding: 12px 16px;
+  margin: 0 10px;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.control-btn:hover {
+  background: #1ed760;
+  transform: scale(1.1);
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 10px;
+  accent-color: #1db954;
+}
+
+.volume {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.album-art {
+  margin: 20px auto;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.album-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.control-btn i {
+  pointer-events: none; /* ensures clicks go to button, not icon */
+}
+
+JAVA
+
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('play');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const progressBar = document.getElementById('progress-bar');
+const volume = document.getElementById('volume');
+const title = document.getElementById('title');
+const artist = document.getElementById('artist');
+
+const songs = [
+  { src: 'songs/song1.mp3', title: 'Champions', artist: 'Seedhe Maut' },
+  { src: 'songs/song2.mp3', title: 'Luka chupi', artist: 'Seedhe Maut' }
+];
+
+let songIndex = 0;
+
+function loadSong(song) {
+  audio.src = song.src;
+  title.textContent = song.title;
+  artist.textContent = song.artist;
+  playBtn.textContent = '▶'; // Reset icon
+}
+
+function playSong() {
+  audio.play();
+  playBtn.textContent = '⏸';
+}
+
+function pauseSong() {
+  audio.pause();
+  playBtn.textContent = '▶';
+}
+
+playBtn.addEventListener('click', () => {
+  if (audio.paused) playSong();
+  else pauseSong();
+});
+
+nextBtn.addEventListener('click', () => {
+  songIndex = (songIndex + 1) % songs.length;
+  loadSong(songs[songIndex]);
+  playSong();
+});
+
+prevBtn.addEventListener('click', () => {
+  songIndex = (songIndex - 1 + songs.length) % songs.length;
+  loadSong(songs[songIndex]);
+  playSong();
+});
+
+audio.addEventListener('timeupdate', () => {
+  progressBar.value = (audio.currentTime / audio.duration) * 100;
+});
+
+progressBar.addEventListener('input', () => {
+  audio.currentTime = (progressBar.value / 100) * audio.duration;
+});
+
+volume.addEventListener('input', () => {
+  audio.volume = volume.value;
+});
+
+loadSong(songs[songIndex]);
+
+  
